@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>职业适配与发展策略评估·基础版</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --card:#fff; --ink:#172033; --muted:#667085;
+    --line:#e4e8f0; --brand:#2457d6; --brand2:#0f8f78;
+    --warn:#b54708; --danger:#b42318; --soft:#eef3ff; --good:#087443;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;line-height:1.65}
+  .wrap{max-width:980px;margin:0 auto;padding:24px 16px 80px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 8px 30px rgba(23,32,51,.05);margin-bottom:18px}
+  h1{font-size:28px;line-height:1.3;margin:0 0 10px}
+  h2{font-size:22px;margin:0 0 12px}
+  h3{font-size:17px;margin:20px 0 10px}
+  p{margin:8px 0}
+  .muted{color:var(--muted);font-size:14px}
+  .tag{display:inline-block;background:var(--soft);color:var(--brand);border-radius:999px;padding:3px 10px;font-size:12px;margin:2px 4px 2px 0}
+  .btn{display:inline-block;border:0;border-radius:12px;padding:12px 20px;font-size:16px;font-weight:700;cursor:pointer;background:var(--brand);color:#fff;margin:8px 8px 0 0}
+  .btn.secondary{background:#fff;color:var(--brand);border:1px solid var(--brand)}
+  .btn.ghost{background:#eef1f6;color:var(--ink)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .progress{height:10px;background:#e8edf7;border-radius:999px;overflow:hidden;margin:12px 0}
+  .progress > div{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));width:0;transition:width .25s}
+  .q{border-top:1px solid var(--line);padding:18px 0 6px}
+  .q:first-of-type{border-top:0}
+  .qtitle{font-weight:700;margin-bottom:10px}
+  .qno{color:var(--brand);margin-right:6px}
+  .opts{display:grid;gap:8px}
+  .opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;background:#fbfcff}
+  .opt:hover{border-color:#b9c8f5;background:#f7f9ff}
+  .opt input{margin-top:4px}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .scale .opt{justify-content:center;text-align:center;font-size:13px;padding:10px 6px}
+  .scale .opt input{display:none}
+  .scale .opt.sel{border-color:var(--brand);background:var(--soft);color:var(--brand);font-weight:700}
+  .error{color:var(--danger);font-size:14px;margin-top:8px}
+  .hidden{display:none}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}.scale{grid-template-columns:1fr}.wrap{padding:14px 10px 60px}.card{padding:18px}}
+  .metric{margin:10px 0}
+  .metricTop{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+  .bar{height:9px;background:#e8edf7;border-radius:999px;overflow:hidden;margin-top:6px}
+  .bar > div{height:100%;background:var(--brand);border-radius:999px}
+  .bar.good > div{background:var(--brand2)}
+  .bar.warn > div{background:var(--warn)}
+  .bar.bad > div{background:var(--danger)}
+  .matchCard{border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;background:#fbfcff}
+  .matchHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+  .scoreBig{font-size:30px;font-weight:800;color:var(--brand)}
+  .small{font-size:13px;color:var(--muted)}
+  .callout{border-left:4px solid var(--brand);background:#f4f7ff;padding:12px 14px;border-radius:10px;margin:12px 0}
+  .callout.warn{border-left-color:var(--warn);background:#fff8f0}
+  .callout.good{border-left-color:var(--good);background:#f0fbf7}
+  .list li{margin:6px 0}
+  .consent{display:flex;gap:10px;align-items:flex-start;background:#fbfcff;border:1px solid var(--line);border-radius:12px;padding:12px}
+  .printOnly{display:none}
+  /* 新增样式 */
+  .restoreBanner{background:#fff8e6;border:1px solid #f0d58c;border-radius:12px;padding:12px 14px;margin:0 0 14px;display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+  .restoreBanner .small{color:#8a5a00}
+  .autosaveHint{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin:8px 0 0;flex-wrap:wrap}
+  .autosaveHint .dot{width:8px;height:8px;border-radius:50%;background:var(--good);display:inline-block;flex:0 0 auto}
+  .autosaveHint.offline .dot{background:var(--muted)}
+  .autosaveHint button{margin-left:auto}
+  @media print{
+    body{background:#fff}
+    .wrap{max-width:none;padding:0}
+    .card{box-shadow:none;border:0;padding:10px 0;page-break-inside:avoid}
+    .noPrint{display:none!important}
+    .printOnly{display:block}
+    .bar{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 开始页 -->
+  <section id="intro" class="card">
+    <span class="tag">基础版自动报告</span>
+    <span class="tag">约 12–15 分钟</span>
+    <span class="tag">本地计算 · 自动保存</span>
+    <h1>职业适配与发展策略评估</h1>
+    <p class="muted">不测“你天生该做什么”，而是测“你在什么职业环境下更可能持续发展、哪些方向值得优先验证、下一步具体怎么做”。</p>
+    <div class="callout">
+      <strong>你会得到：</strong>
+      <ul class="list">
+        <li>个人兴趣、工作风格、价值观、决策风险、社会资源与约束画像；</li>
+        <li>TOP5 职业群匹配卡：匹配度、理由、岗位示例、门槛、风险点、验证行动；</li>
+        <li>不建议优先方向及原因；</li>
+        <li>90 天行动计划：信息访谈、微项目、技能补足、投递复盘。</li>
+      </ul>
+    </div>
+    <div class="callout warn">
+      <strong>重要说明：</strong>本基础版为规则化自动匹配报告，不是临床诊断，也不是成功概率预测。它用于减少职业试错成本、形成可验证假设；重大职业决策建议结合深度版专家解读或现实信息访谈。
+    </div>
+    <label class="consent">
+      <input type="checkbox" id="consent">
+      <span>我已阅读并同意：本测试为职业发展自评工具，不替代心理咨询、医疗诊断、法律或财务建议；答案仅在本地浏览器计算并保存在本机，不主动上传。我理解基础版报告为自动生成，专家复核需升级深度版。</span>
+    </label>
+    <div class="error hidden" id="consentError">请先勾选知情同意。</div>
+    <button class="btn" id="startBtn">开始测试</button>
+  </section>
+
+  <!-- 测试区 -->
+  <section id="test" class="card hidden">
+    <div id="restoreNotice" class="restoreBanner hidden"></div>
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <span class="tag" id="stepTag">第 1 步</span>
+        <h2 id="moduleTitle" style="margin-top:8px">背景与约束</h2>
+      </div>
+      <div class="muted" id="progressText">0 / 58</div>
+    </div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <p class="muted" id="moduleHint"></p>
+    <div class="autosaveHint" id="autosaveHint">
+      <span class="dot"></span>
+      <span id="autosaveText">进度已自动保存在本浏览器</span>
+      <button type="button" class="btn ghost" style="padding:4px 10px;font-size:12px" onclick="restart()">清除进度</button>
+    </div>
+    <form id="questionForm"></form>
+    <div class="error hidden" id="formError">请完成本页所有必答题后再继续。</div>
+    <div class="row" style="justify-content:space-between;margin-top:18px">
+      <button class="btn ghost noPrint" id="prevBtn" type="button">上一步</button>
+      <div>
+        <button class="btn secondary noPrint" id="nextBtn" type="button">下一步</button>
+        <button class="btn hidden" id="submitBtn" type="button">生成我的基础版报告</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 报告区 -->
+  <section id="report" class="hidden"></section>
+
+</div>
+
+<script>
+/* =========================================================
+   职业适配与发展策略评估 · 基础版（带本地自动保存）
+   ========================================================= */
+
+const STORAGE_KEY = 'career_assessment_v1';
+const STORAGE_VERSION = 1;
+
+const MODULES = [
+  {key:'A', title:'背景与约束', hint:'这部分帮助判断现实可行性。请按当前真实情况选择，不影响“好坏”。'},
+  {key:'B', title:'兴趣与驱动', hint:'请按你长期更自然、更愿意投入的状态选择，而不是“应该喜欢”。'},
+  {key:'C', title:'工作风格与效能', hint:'请按你在工作中的通常表现选择。'},
+  {key:'D', title:'决策与风险', hint:'请按你面对职业选择时的真实反应选择。'},
+  {key:'E', title:'社会资源与机会感知', hint:'这部分用于判断信息渠道、人脉与行业约束。'},
+  {key:'F', title:'情境判断', hint:'请选择你最可能采取的第一步。'},
+  {key:'G', title:'优先级排序', hint:'请选出最重要的事项，帮助报告给出更具体的行动方向。'}
+];
+
+const SCALE_LABELS = ['非常不同意','不同意','一般','同意','非常同意'];
+
+const QUESTIONS = [
+  /* A 背景与约束 10 */
+  {id:'A1',m:'A',type:'single',t:'你的年龄段是？',opts:[
+    {label:'18–24 岁'},{label:'25–30 岁'},{label:'31–40 岁'},{label:'41 岁及以上'}
+  ]},
+  {id:'A2',m:'A',type:'single',t:'你的最高学历是？',opts:[
+    {label:'高中及以下'},{label:'大专'},{label:'本科'},{label:'硕士'},{label:'博士'}
+  ]},
+  {id:'A3',m:'A',type:'single',t:'你的全职工作年限约是？',opts:[
+    {label:'0–1 年'},{label:'2–3 年'},{label:'4–6 年'},{label:'7–10 年'},{label:'10 年以上'}
+  ]},
+  {id:'A4',m:'A',type:'single',t:'你当前所在或最接近的行业是？',opts:[
+    {label:'互联网/科技'},{label:'金融/法律'},{label:'教育/培训'},{label:'医疗/健康'},
+    {label:'制造/工程'},{label:'文化/传媒'},{label:'公共服务'},{label:'学生/待业'},{label:'其他'}
+  ]},
+  {id:'A5',m:'A',type:'single',t:'家庭经济责任对你的职业选择约束有多大？',opts:[
+    {label:'几乎没有',scores:{家庭责任:10}},
+    {label:'较低',scores:{家庭责任:30}},
+    {label:'中等',scores:{家庭责任:55}},
+    {label:'较高',scores:{家庭责任:75}},
+    {label:'很高，必须优先稳定收入',scores:{家庭责任:95}}
+  ]},
+  {id:'A6',m:'A',type:'single',t:'如果暂时失去收入，你的经济缓冲大约能支撑多久？',opts:[
+    {label:'不足 1 个月',scores:{经济缓冲:20}},
+    {label:'1–3 个月',scores:{经济缓冲:45}},
+    {label:'3–6 个月',scores:{经济缓冲:70}},
+    {label:'6 个月以上',scores:{经济缓冲:95}}
+  ]},
+  {id:'A7',m:'A',type:'single',t:'为合适职业机会，你的跨城搬迁意愿是？',opts:[
+    {label:'完全不能',scores:{搬迁意愿:10}},
+    {label:'只考虑本地',scores:{搬迁意愿:30}},
+    {label:'愿意短期尝试',scores:{搬迁意愿:65}},
+    {label:'愿意长期跨城发展',scores:{搬迁意愿:95}}
+  ]},
+  {id:'A8',m:'A',type:'multi',max:3,t:'你目前较拿得出手的可迁移技能有哪些？（最多选 3 项）',opts:[
+    {label:'写作表达'},{label:'数据分析'},{label:'项目管理'},{label:'客户沟通'},
+    {label:'编程技术'},{label:'设计创意'},{label:'教学培训'},{label:'财务合规'},
+    {label:'组织协调'},{label:'外语'}
+  ]},
+  {id:'A9',m:'A',type:'single',t:'你每周可稳定用于学习或职业准备的时间约是？',opts:[
+    {label:'少于 2 小时'},{label:'2–5 小时'},{label:'5–10 小时'},{label:'10 小时以上'}
+  ]},
+  {id:'A10',m:'A',type:'single',t:'你当前的职业状态更接近？',opts:[
+    {label:'探索方向'},{label:'准备转岗/转行'},{label:'正在求职'},{label:'想晋升'},{label:'想做副业'},{label:'比较迷茫'}
+  ]},
+
+  /* B 兴趣与驱动 12 */
+  {id:'B1',m:'B',type:'scale',t:'我喜欢动手操作工具、设备或处理具体实物。',dims:{R:1}},
+  {id:'B2',m:'B',type:'scale',t:'我喜欢研究事物背后的原因和规律。',dims:{I:1}},
+  {id:'B3',m:'B',type:'scale',t:'我喜欢用文字、图像或设计表达想法。',dims:{A:1}},
+  {id:'B4',m:'B',type:'scale',t:'我喜欢帮助别人解决困难。',dims:{S:1}},
+  {id:'B5',m:'B',type:'scale',t:'我喜欢说服别人接受方案或产品。',dims:{E:1}},
+  {id:'B6',m:'B',type:'scale',t:'我喜欢把资料和数据整理得清楚有序。',dims:{C:1}},
+  {id:'B7',m:'B',type:'scale',t:'我喜欢尝试新方法，即使结果不确定。',dims:{I:0.5,不确定性:0.5}},
+  {id:'B8',m:'B',type:'scale',t:'我喜欢在团队中协调不同意见。',dims:{S:0.5,E:0.5,协作:0.5}},
+  {id:'B9',m:'B',type:'scale',t:'工作能让我持续学习，比长期稳定更重要。',dims:{成长:1}},
+  {id:'B10',m:'B',type:'scale',t:'我希望工作有较大的自主决定空间。',dims:{自主:1}},
+  {id:'B11',m:'B',type:'scale',t:'收入快速增长比工作生活平衡更重要。',dims:{收入:1}},
+  {id:'B12',m:'B',type:'scale',t:'工作能帮助他人或社会，对我很重要。',dims:{影响:1}},
+
+  /* C 工作风格 12 */
+  {id:'C1',m:'C',type:'scale',t:'我会先列计划再行动。',dims:{结构化:1}},
+  {id:'C2',m:'C',type:'scale',t:'我的文件、资料或任务通常分类清楚。',dims:{结构化:1}},
+  {id:'C3',m:'C',type:'scale',t:'我乐于配合团队调整自己的节奏。',dims:{协作:1}},
+  {id:'C4',m:'C',type:'scale',t:'遇到冲突时，我愿意主动沟通。',dims:{协作:1}},
+  {id:'C5',m:'C',type:'scale',t:'计划突然改变时，我能较快适应。',dims:{不确定性:1}},
+  {id:'C6',m:'C',type:'scale',t:'没有标准答案时，我仍能推进任务。',dims:{不确定性:1}},
+  {id:'C7',m:'C',type:'scale',t:'截止日期临近时，我仍能保持条理。',dims:{压力稳定:1}},
+  {id:'C8',m:'C',type:'scale',t:'被批评后，我能较快调整情绪。',dims:{压力稳定:1}},
+  {id:'C9',m:'C',type:'scale',t:'我能向陌生人清楚介绍自己的成果。',dims:{自我推销:1}},
+  {id:'C10',m:'C',type:'scale',t:'我愿意主动争取资源和机会。',dims:{自我推销:1}},
+  {id:'C11',m:'C',type:'scale',t:'我习惯定期学习新技能。',dims:{学习:1}},
+  {id:'C12',m:'C',type:'scale',t:'遇到不会的任务，我愿意先试再问。',dims:{学习:1}},
+
+  /* D 决策与风险 8 */
+  {id:'D1',m:'D',type:'scale',t:'我常因害怕选错而拖延决定。',dims:{决策困难:1}},
+  {id:'D2',m:'D',type:'scale',t:'做重要决定时，我容易反复犹豫。',dims:{决策困难:1}},
+  {id:'D3',m:'D',type:'scale',t:'我愿意为更高回报承担较大风险。',dims:{风险偏好:1}},
+  {id:'D4',m:'D',type:'scale',t:'面对不确定机会，我愿意先小步尝试。',dims:{风险偏好:1}},
+  {id:'D5',m:'D',type:'scale',t:'做职业决定前，我会主动收集多方信息。',dims:{信息收集:1}},
+  {id:'D6',m:'D',type:'scale',t:'我会找人核实行业和岗位的真实情况。',dims:{信息收集:1}},
+  {id:'D7',m:'D',type:'scale',t:'我常把重要任务拖到最后。',dims:{行动拖延:1}},
+  {id:'D8',m:'D',type:'scale',t:'想到换工作或转方向，我会迟迟不开始行动。',dims:{行动拖延:1}},
+
+  /* E 社会资源 8 */
+  {id:'E1',m:'E',type:'scale',t:'我拥有能提供行业真实信息的人脉。',dims:{人脉信息:1}},
+  {id:'E2',m:'E',type:'scale',t:'我知道如何找到目标岗位的从业者交流。',dims:{人脉信息:1}},
+  {id:'E3',m:'E',type:'scale',t:'我偏好规则清晰、流程稳定的组织。',dims:{组织规范偏好:1}},
+  {id:'E4',m:'E',type:'scale',t:'我能在职责模糊时自己找到方向。',dims:{不确定性:1}},
+  {id:'E5',m:'E',type:'scale',t:'我关注的行业未来三年成长机会较好。',dims:{行业周期:1}},
+  {id:'E6',m:'E',type:'scale',t:'我担心目标岗位未来会被技术明显替代。',dims:{行业周期:1},reverse:true},
+  {id:'E7',m:'E',type:'scale',t:'我常通过招聘网站以外的渠道了解机会。',dims:{信息收集:1}},
+  {id:'E8',m:'E',type:'scale',t:'我愿意为职业机会维护长期人脉关系。',dims:{人脉信息:1}},
+
+  /* F 情境判断 5 */
+  {id:'F1',m:'F',type:'single',t:'你接手一个新项目，第一步更可能做什么？',opts:[
+    {label:'先明确目标和成功标准',scores:{结构化:80,信息收集:70}},
+    {label:'先列详细计划',scores:{结构化:90}},
+    {label:'先找相关人沟通',scores:{协作:85,人脉信息:60}},
+    {label:'先动手试做一版',scores:{不确定性:75,学习:70}}
+  ]},
+  {id:'F2',m:'F',type:'single',t:'同事与你意见冲突，你更可能？',opts:[
+    {label:'主动约谈，寻找共同目标',scores:{协作:85}},
+    {label:'按流程上报或请上级协调',scores:{组织规范偏好:70}},
+    {label:'自己先按判断推进',scores:{自主:75,自我推销:55}},
+    {label:'尽量避免冲突',scores:{协作:35,决策困难:60}}
+  ]},
+  {id:'F3',m:'F',type:'single',t:'有一个转岗机会但你不确定是否适合，你更可能？',opts:[
+    {label:'先做信息访谈再判断',scores:{信息收集:85,人脉信息:60}},
+    {label:'用一个小项目验证',scores:{风险偏好:70,学习:75}},
+    {label:'等别人给我建议',scores:{决策困难:75}},
+    {label:'风险太大，先拒绝',scores:{风险偏好:25}}
+  ]},
+  {id:'F4',m:'F',type:'single',t:'任务截止很紧且信息不全，你更可能？',opts:[
+    {label:'先搭框架，再边做边补信息',scores:{结构化:80,压力稳定:75}},
+    {label:'等信息齐了再开始',scores:{行动拖延:75,决策困难:55}},
+    {label:'马上找人协作分工',scores:{协作:80}},
+    {label:'自己加班硬扛',scores:{压力稳定:65,协作:35}}
+  ]},
+  {id:'F5',m:'F',type:'single',t:'你要学习一项新技能，更可能？',opts:[
+    {label:'制定周计划并按阶段学习',scores:{学习:80,结构化:70}},
+    {label:'直接做一个真实小项目',scores:{学习:85,风险偏好:60}},
+    {label:'先观察别人怎么做',scores:{信息收集:70}},
+    {label:'暂时不学，等需要再说',scores:{学习:25,行动拖延:60}}
+  ]},
+
+  /* G 优先级 3 */
+  {id:'G1',m:'G',type:'multi',max:3,t:'以下工作条件中，你最看重哪 3 项？',opts:[
+    {label:'收入高',scores:{收入:90}},
+    {label:'长期稳定',scores:{稳定:90}},
+    {label:'成长快',scores:{成长:90}},
+    {label:'自主空间大',scores:{自主:90}},
+    {label:'工作生活平衡',scores:{平衡:90}},
+    {label:'团队氛围好',scores:{协作:60,平衡:30}},
+    {label:'社会影响大',scores:{影响:90}},
+    {label:'地理位置便利',scores:{平衡:50,稳定:30}}
+  ]},
+  {id:'G2',m:'G',type:'multi',max:3,t:'以下价值观中，你最看重哪 3 项？',opts:[
+    {label:'稳定安全',scores:{稳定:90}},
+    {label:'持续成长',scores:{成长:90}},
+    {label:'自主自由',scores:{自主:90}},
+    {label:'帮助他人/社会影响',scores:{影响:90}},
+    {label:'高收入回报',scores:{收入:90}},
+    {label:'生活平衡',scores:{平衡:90}},
+    {label:'创造与表达',scores:{A:50,自主:50}},
+    {label:'竞争与成就',scores:{E:50,收入:50}}
+  ]},
+  {id:'G3',m:'G',type:'single',t:'未来三年，你更希望实现哪类目标？',opts:[
+    {label:'成为某领域专家',scores:{学习:80,成长:80,稳定:40}},
+    {label:'带团队或做管理',scores:{E:70,协作:70,收入:60}},
+    {label:'转行到新方向',scores:{学习:70,风险偏好:70,成长:70}},
+    {label:'升职加薪',scores:{收入:70,成长:60,E:50}},
+    {label:'做副业或自由职业',scores:{自主:85,风险偏好:80,不确定性:70}},
+    {label:'稳定生活',scores:{稳定:90,平衡:70,风险偏好:20}}
+  ]}
+];
+
+const DIM_NAMES = {
+  R:'实操倾向', I:'研究分析', A:'创意表达', S:'助人服务', E:'影响说服', C:'规范整理',
+  稳定:'稳定安全', 成长:'持续成长', 自主:'自主空间', 影响:'社会影响', 收入:'收入回报', 平衡:'生活平衡',
+  结构化:'结构化', 协作:'协作沟通', 不确定性:'不确定性耐受', 压力稳定:'压力稳定', 自我推销:'自我推销', 学习:'学习驱动',
+  决策困难:'决策困难', 风险偏好:'风险偏好', 信息收集:'信息收集', 行动拖延:'行动拖延',
+  人脉信息:'人脉与信息渠道', 搬迁意愿:'搬迁意愿', 经济缓冲:'经济缓冲', 家庭责任:'家庭责任',
+  行业周期:'行业成长感知', 组织规范偏好:'规范组织偏好'
+};
+
+const DIM_GROUPS = [
+  {title:'兴趣与驱动', dims:['R','I','A','S','E','C']},
+  {title:'工作风格与效能', dims:['结构化','协作','不确定性','压力稳定','自我推销','学习']},
+  {title:'职业价值观', dims:['稳定','成长','自主','影响','收入','平衡']},
+  {title:'决策与风险', dims:['决策困难','风险偏好','信息收集','行动拖延']},
+  {title:'社会资源与约束', dims:['人脉信息','搬迁意愿','经济缓冲','家庭责任','行业周期','组织规范偏好']}
+];
+
+const CAREERS = [
+  {
+    name:'项目协调 / 产品运营', scoreKey:'项目协调',
+    ideal:{R:20,I:60,A:30,S:60,E:50,C:70,结构化:80,协作:80,不确定性:60,压力稳定:70,自我推销:55,学习:70,稳定:50,成长:70,自主:55,影响:60,收入:60,平衡:55,风险偏好:50,信息收集:60,人脉信息:60,组织规范偏好:50},
+    examples:'项目专员、产品运营、运营协调、客户成功、研究助理',
+    gate:'通常要求本科或同等能力；作品/项目经历比专业名更重要；需能拆解任务、跟进节点、跨部门沟通。',
+    risk:'若自我推销很低，可能做了很多但晋升慢；若结构化低，容易在多任务中失控。',
+    verify:'做一次 2 周的小项目：明确目标—列计划—跨人沟通—复盘交付。',
+    skills:'需求拆解、项目计划、跨部门沟通、复盘写作、Excel/项目管理工具'
+  },
+  {
+    name:'数据分析 / 研究分析', scoreKey:'数据分析',
+    ideal:{R:30,I:85,A:30,S:40,E:30,C:80,结构化:80,协作:55,不确定性:50,压力稳定:60,自我推销:35,学习:75,稳定:55,成长:70,自主:55,影响:45,收入:60,平衡:60,风险偏好:40,信息收集:70,人脉信息:50,组织规范偏好:60},
+    examples:'数据分析师、研究助理、商业分析、用户研究助理、统计专员',
+    gate:'需要 SQL/Excel/统计基础之一；要有可展示的分析报告；入门岗位竞争较高。',
+    risk:'若学习驱动低，工具更新会吃力；若自我推销过低，分析结论难被看见。',
+    verify:'用公开数据完成一份 3 页分析报告，并找 2 位从业者点评。',
+    skills:'SQL/Excel、统计基础、数据可视化、报告写作、业务理解'
+  },
+  {
+    name:'内容与传播 / 品牌', scoreKey:'内容传播',
+    ideal:{R:20,I:60,A:85,S:50,E:65,C:40,结构化:50,协作:60,不确定性:70,压力稳定:60,自我推销:70,学习:65,稳定:40,成长:65,自主:65,影响:60,收入:50,平衡:50,风险偏好:60,信息收集:60,人脉信息:60,组织规范偏好:35},
+    examples:'内容运营、品牌专员、新媒体编辑、公关传播、文案策划',
+    gate:'需要作品集或持续输出记录；对选题、表达、平台理解要求高。',
+    risk:'若不确定性耐受低，会不适应热点和反馈波动；若自我推销低，作品难被传播。',
+    verify:'连续 4 周每周发布 1 篇作品，记录阅读/反馈数据。',
+    skills:'写作、选题、平台运营、数据复盘、作品集整理'
+  },
+  {
+    name:'销售 / 商务拓展', scoreKey:'销售商务',
+    ideal:{R:20,I:40,A:40,S:60,E:90,C:50,结构化:50,协作:65,不确定性:75,压力稳定:80,自我推销:90,学习:55,稳定:35,成长:75,自主:60,影响:55,收入:85,平衡:40,风险偏好:75,信息收集:60,人脉信息:80,组织规范偏好:30},
+    examples:'销售顾问、商务拓展、客户经理、渠道经理、大客户助理',
+    gate:'入门门槛相对灵活，但收入波动大；需要高频沟通、异议处理和结果抗压。',
+    risk:'若自我推销或人脉低，会启动困难；若家庭稳定收入要求高，底薪低岗位风险大。',
+    verify:'做 5 次真实客户/用户访谈，尝试一次小范围推荐或转化。',
+    skills:'客户画像、异议处理、CRM 记录、复盘、行业知识'
+  },
+  {
+    name:'行政 / 运营支持', scoreKey:'行政运营',
+    ideal:{R:30,I:35,A:25,S:50,E:30,C:85,结构化:85,协作:70,不确定性:35,压力稳定:60,自我推销:35,学习:45,稳定:80,成长:40,自主:35,影响:40,收入:45,平衡:70,风险偏好:25,信息收集:45,人脉信息:45,组织规范偏好:85},
+    examples:'行政专员、运营支持、人事助理、流程专员、办公室管理',
+    gate:'看重细致、可靠、流程意识；晋升需主动学习流程优化或专业模块。',
+    risk:'若成长驱动高，可能觉得发展慢；若结构化低，容易出错。',
+    verify:'为当前或模拟任务做一份流程清单和复盘模板，坚持 2 周。',
+    skills:'流程优化、Excel、会议纪要、供应商管理、沟通跟进'
+  },
+  {
+    name:'教育与培训', scoreKey:'教育培训',
+    ideal:{R:25,I:60,A:50,S:85,E:55,C:55,结构化:65,协作:75,不确定性:50,压力稳定:60,自我推销:55,学习:75,稳定:55,成长:65,自主:55,影响:80,收入:45,平衡:65,风险偏好:35,信息收集:55,人脉信息:55,组织规范偏好:55},
+    examples:'课程顾问、培训专员、教研助理、讲师助理、学习发展',
+    gate:'需要表达与课程设计能力；部分岗位要求教师资格或行业经验。',
+    risk:'若影响驱动低，长期教学易倦怠；若自我推销低，专业价值难被看见。',
+    verify:'设计并讲一次 30 分钟微课，收集 3 份反馈。',
+    skills:'课程设计、表达、评估、学习反馈、内容整理'
+  },
+  {
+    name:'技术支持 / 实施顾问', scoreKey:'技术支持',
+    ideal:{R:50,I:70,A:25,S:65,E:50,C:65,结构化:70,协作:75,不确定性:60,压力稳定:65,自我推销:55,学习:70,稳定:55,成长:65,自主:50,影响:50,收入:60,平衡:55,风险偏好:45,信息收集:60,人脉信息:60,组织规范偏好:60},
+    examples:'技术支持、实施顾问、客户成功技术岗、售前助理、系统培训',
+    gate:'需要产品理解、排障流程和客户沟通；技术背景是加分项。',
+    risk:'若压力稳定低，客户问题集中时会消耗大；若协作低，跨团队推进困难。',
+    verify:'选一个工具，写一份排障文档并给 1 位非专业用户试用。',
+    skills:'产品知识、排障流程、客户沟通、文档写作、需求转译'
+  },
+  {
+    name:'创意设计 / 用户体验', scoreKey:'创意设计',
+    ideal:{R:30,I:65,A:90,S:45,E:50,C:35,结构化:45,协作:55,不确定性:80,压力稳定:55,自我推销:60,学习:70,稳定:30,成长:70,自主:80,影响:55,收入:50,平衡:55,风险偏好:65,信息收集:55,人脉信息:55,组织规范偏好:25},
+    examples:'视觉设计、UI 助理、用户体验助理、创意策划、交互设计',
+    gate:'高度依赖作品集；需要接受反复评审；入门需工具和项目。',
+    risk:'若不确定性耐受低，难适应改稿和反馈；若结构化低，项目交付易乱。',
+    verify:'完成 1 个完整小作品集项目，并做一次 3 人评审。',
+    skills:'作品集、用户研究、设计工具、评审复盘、视觉表达'
+  },
+  {
+    name:'财务 / 合规 / 审计', scoreKey:'财务合规',
+    ideal:{R:30,I:60,A:20,S:35,E:35,C:95,结构化:90,协作:50,不确定性:25,压力稳定:70,自我推销:30,学习:55,稳定:85,成长:45,自主:35,影响:40,收入:60,平衡:65,风险偏好:15,信息收集:60,人脉信息:45,组织规范偏好:95},
+    examples:'财务助理、审计助理、合规专员、风控助理、税务助理',
+    gate:'证书与专业背景重要；对准确性和规范要求高。',
+    risk:'若不确定性耐受高、创意表达强，可能觉得约束大；若结构化低，风险高。',
+    verify:'完成一次真实或模拟报表核对，记录差错和流程改进点。',
+    skills:'会计准则、Excel、合规、风险识别、细致核对'
+  },
+  {
+    name:'公共服务 / 社会服务', scoreKey:'公共服务',
+    ideal:{R:30,I:50,A:30,S:90,E:40,C:60,结构化:65,协作:80,不确定性:45,压力稳定:60,自我推销:35,学习:60,稳定:75,成长:50,自主:45,影响:85,收入:35,平衡:70,风险偏好:30,信息收集:50,人脉信息:55,组织规范偏好:75},
+    examples:'社会工作者助理、公益项目专员、社区服务、公共事务助理',
+    gate:'部分岗位需专业背景或考试；收入通常不高但稳定性和社会影响较强。',
+    risk:'若收入驱动很高，可能不满意；若压力稳定低，情绪消耗较大。',
+    verify:'参与 1 次志愿服务或公益项目，记录服务对象反馈。',
+    skills:'政策理解、案例记录、沟通、资源协调、边界意识'
+  },
+  {
+    name:'创业 / 自由职业', scoreKey:'创业自由',
+    ideal:{R:30,I:50,A:55,S:45,E:85,C:40,结构化:40,协作:50,不确定性:85,压力稳定:80,自我推销:80,学习:75,稳定:20,成长:85,自主:90,影响:60,收入:75,平衡:35,风险偏好:90,信息收集:65,人脉信息:75,组织规范偏好:15},
+    examples:'小生意、自由顾问、内容创作者、独立设计/开发、副业转主业',
+    gate:'需要获客能力、现金流缓冲、自我管理和风险承受；不是默认更高级的选择。',
+    risk:'家庭责任高、经济缓冲低时风险很大；自我推销低和不确定性耐受低会放大失败成本。',
+    verify:'先做 4 周最小可行副业：1 个服务/产品、3 个真实咨询、1 次收费或意向验证。',
+    skills:'最小可行产品、获客、财务测算、法律基础、时间管理'
+  },
+  {
+    name:'医疗健康支持 / 健康管理', scoreKey:'医疗健康',
+    ideal:{R:40,I:60,A:25,S:80,E:40,C:65,结构化:70,协作:75,不确定性:40,压力稳定:70,自我推销:40,学习:65,稳定:80,成长:55,自主:45,影响:80,收入:50,平衡:60,风险偏好:25,信息收集:55,人脉信息:50,组织规范偏好:80},
+    examples:'健康管理助理、医疗行政、患者服务、健康内容、临床研究助理',
+    gate:'部分岗位需专业资质；对伦理、流程和沟通要求高。',
+    risk:'若压力稳定低，面对病患情绪易消耗；若规范偏好低，流程风险高。',
+    verify:'访谈 2 位健康行业从业者，确认资质门槛和日常压力。',
+    skills:'健康知识、沟通、流程、伦理、记录规范'
+  }
+];
+
+/* ================= 状态与存储 ================= */
+let step = 0;
+let answers = {};
+let reportData = null;
+let currentPhase = 'intro'; // intro | test | report
+let reportNo = null;
+let reportGeneratedAt = null;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function storageAvailable(){
+  try{
+    const t = '__ca_test__';
+    localStorage.setItem(t, t);
+    localStorage.removeItem(t);
+    return true;
+  }catch(e){ return false; }
+}
+const HAS_STORAGE = storageAvailable();
+
+function saveState(){
+  if(!HAS_STORAGE) return;
+  try{
+    const consentEl = $('consent');
+    const state = {
+      version: STORAGE_VERSION,
+      phase: currentPhase,
+      step: step,
+      answers: answers,
+      consent: consentEl ? consentEl.checked : false,
+      reportNo: reportNo,
+      reportGeneratedAt: reportGeneratedAt,
+      savedAt: Date.now()
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }catch(e){}
+}
+
+function loadState(){
+  if(!HAS_STORAGE) return null;
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    const state = JSON.parse(raw);
+    if(!state || state.version !== STORAGE_VERSION) return null;
+    return state;
+  }catch(e){ return null; }
+}
+
+function clearState(){
+  if(!HAS_STORAGE) return;
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+}
+
+function updateAutosaveHint(){
+  const el = $('autosaveText');
+  const box = $('autosaveHint');
+  if(!el || !box) return;
+  if(HAS_STORAGE){
+    el.textContent = '进度已自动保存在本浏览器，刷新不会丢失';
+    box.classList.remove('offline');
+  }else{
+    el.textContent = '当前浏览器不支持自动保存，请勿刷新页面';
+    box.classList.add('offline');
+  }
+}
+
+function showRestoreNotice(savedAt){
+  const el = $('restoreNotice');
+  if(!el) return;
+  const t = savedAt ? new Date(savedAt).toLocaleString('zh-CN') : '之前';
+  el.innerHTML = `<div><strong>已恢复上次进度</strong><div class="small">保存时间：${t}。如需从头开始，请点击【清除进度】。</div></div>`;
+  el.classList.remove('hidden');
+}
+
+function restart(){
+  if(!confirm('确定要清除本次进度并重新开始吗？此操作不可撤销。')) return;
+  clearState();
+  location.reload();
+}
+window.restart = restart;
+
+/* ================= 开始 ================= */
+$('startBtn').addEventListener('click', () => {
+  if(!$('consent').checked){
+    $('consentError').classList.remove('hidden');
+    return;
+  }
+  $('consentError').classList.add('hidden');
+  currentPhase = 'test';
+  $('intro').classList.add('hidden');
+  $('test').classList.remove('hidden');
+  step = 0;
+  saveState();
+  renderStep();
+});
+
+/* ================= 渲染步骤 ================= */
+function renderStep(){
+  const mod = MODULES[step];
+  $('stepTag').textContent = `第 ${step+1} 步 / 共 ${MODULES.length} 步`;
+  $('moduleTitle').textContent = mod.title;
+  $('moduleHint').textContent = mod.hint;
+  $('formError').classList.add('hidden');
+
+  const qs = QUESTIONS.filter(q => q.m === mod.key);
+  const form = $('questionForm');
+  form.innerHTML = qs.map(q => renderQuestion(q)).join('');
+
+  qs.forEach(q => {
+    if(q.type === 'scale'){
+      const val = answers[q.id];
+      if(val){
+        document.querySelectorAll(`input[name="${q.id}"]`).forEach(inp => {
+          if(Number(inp.value) === Number(val)){
+            inp.checked = true;
+            inp.closest('.opt').classList.add('sel');
+          }
+        });
+      }
+      document.querySelectorAll(`input[name="${q.id}"]`).forEach(inp => {
+        inp.addEventListener('change', () => {
+          document.querySelectorAll(`input[name="${q.id}"]`).forEach(i => i.closest('.opt').classList.remove('sel'));
+          inp.closest('.opt').classList.add('sel');
+          answers[q.id] = Number(inp.value);
+          updateProgress();
+        });
+      });
+    }else if(q.type === 'single'){
+      const val = answers[q.id];
+      document.querySelectorAll(`input[name="${q.id}"]`).forEach(inp => {
+        if(inp.value === val) inp.checked = true;
+        inp.addEventListener('change', () => {
+          answers[q.id] = inp.value;
+          updateProgress();
+        });
+      });
+    }else if(q.type === 'multi'){
+      const arr = answers[q.id] || [];
+      document.querySelectorAll(`input[name="${q.id}"]`).forEach(inp => {
+        if(arr.includes(inp.value)) inp.checked = true;
+        inp.addEventListener('change', () => {
+          let selected = [...document.querySelectorAll(`input[name="${q.id}"]:checked`)].map(i => i.value);
+          if(selected.length > q.max){
+            inp.checked = false;
+            selected = [...document.querySelectorAll(`input[name="${q.id}"]:checked`)].map(i => i.value);
+            alert(`本题最多选择 ${q.max} 项。`);
+          }
+          answers[q.id] = selected;
+          updateProgress();
+        });
+      });
+    }
+  });
+
+  $('prevBtn').style.visibility = step === 0 ? 'hidden' : 'visible';
+  $('nextBtn').classList.toggle('hidden', step === MODULES.length - 1);
+  $('submitBtn').classList.toggle('hidden', step !== MODULES.length - 1);
+  updateProgress();
+}
+
+function renderQuestion(q){
+  const title = `<div class="qtitle"><span class="qno">${q.id}</span>${esc(q.t)}</div>`;
+  if(q.type === 'scale'){
+    return `<div class="q" data-qid="${q.id}">${title}
+      <div class="scale">
+        ${SCALE_LABELS.map((lab,i)=>`
+          <label class="opt">
+            <input type="radio" name="${q.id}" value="${i+1}">
+            <span>${i+1}<br><span class="small">${lab}</span></span>
+          </label>`).join('')}
+      </div>
+    </div>`;
+  }
+  if(q.type === 'single'){
+    return `<div class="q" data-qid="${q.id}">${title}
+      <div class="opts">
+        ${q.opts.map(o=>`
+          <label class="opt">
+            <input type="radio" name="${q.id}" value="${esc(o.label)}">
+            <span>${esc(o.label)}</span>
+          </label>`).join('')}
+      </div>
+    </div>`;
+  }
+  if(q.type === 'multi'){
+    return `<div class="q" data-qid="${q.id}">${title}
+      <p class="small">最多选 ${q.max} 项${q.id.startsWith('G') ? '，请选满 ' + q.max + ' 项' : ''}</p>
+      <div class="opts">
+        ${q.opts.map(o=>`
+          <label class="opt">
+            <input type="checkbox" name="${q.id}" value="${esc(o.label)}">
+            <span>${esc(o.label)}</span>
+          </label>`).join('')}
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+/* ================= 校验与导航 ================= */
+function validateStep(){
+  const mod = MODULES[step];
+  const qs = QUESTIONS.filter(q => q.m === mod.key);
+  for(const q of qs){
+    const a = answers[q.id];
+    if(q.type === 'scale' || q.type === 'single'){
+      if(a === undefined || a === null || a === '') return false;
+    }
+    if(q.type === 'multi'){
+      if(!Array.isArray(a) || a.length === 0) return false;
+      if(q.id.startsWith('G') && a.length !== q.max) return false;
+    }
+  }
+  return true;
+}
+
+$('nextBtn').addEventListener('click', () => {
+  if(!validateStep()){
+    $('formError').classList.remove('hidden');
+    $('formError').textContent = '请完成本页所有必答题。G1、G2 需选满 3 项。';
+    return;
+  }
+  $('formError').classList.add('hidden');
+  step++;
+  saveState();
+  renderStep();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+$('prevBtn').addEventListener('click', () => {
+  step = Math.max(0, step-1);
+  saveState();
+  renderStep();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+$('submitBtn').addEventListener('click', () => {
+  if(!validateStep()){
+    $('formError').classList.remove('hidden');
+    $('formError').textContent = '请完成本页所有必答题。G1、G2 需选满 3 项。';
+    return;
+  }
+  $('formError').classList.add('hidden');
+  reportNo = 'BASIC-' + Date.now().toString(36).toUpperCase().slice(-6);
+  reportGeneratedAt = new Date().toISOString();
+  currentPhase = 'report';
+  saveState();
+  reportData = computeReport();
+  renderReport(reportData);
+  $('test').classList.add('hidden');
+  $('report').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+function updateProgress(){
+  const answered = QUESTIONS.filter(q => {
+    const a = answers[q.id];
+    if(q.type === 'multi') return Array.isArray(a) && a.length > 0;
+    return a !== undefined && a !== null && a !== '';
+  }).length;
+  const pct = Math.round(answered / QUESTIONS.length * 100);
+  $('progressBar').style.width = pct + '%';
+  $('progressText').textContent = `${answered} / ${QUESTIONS.length}`;
+  saveState();
+}
+
+/* ================= 计分 ================= */
+function computeReport(){
+  const dimSums = {}, dimCounts = {}, dimItems = {};
+  const add = (dim, val, weight=1, qid='') => {
+    if(val === undefined || val === null || isNaN(val)) return;
+    dimSums[dim] = (dimSums[dim] || 0) + val * weight;
+    dimCounts[dim] = (dimCounts[dim] || 0) + weight;
+    if(qid){
+      dimItems[dim] = dimItems[dim] || [];
+      if(!dimItems[dim].includes(qid)) dimItems[dim].push(qid);
+    }
+  };
+
+  QUESTIONS.forEach(q => {
+    const a = answers[q.id];
+    if(q.type === 'scale'){
+      if(a === undefined) return;
+      let v = Number(a);
+      if(q.reverse) v = 6 - v;
+      const s = (v - 1) / 4 * 100;
+      Object.entries(q.dims || {}).forEach(([dim,w]) => add(dim, s, w, q.id));
+    }else if(q.type === 'single'){
+      const opt = (q.opts || []).find(o => o.label === a);
+      if(opt && opt.scores){
+        Object.entries(opt.scores).forEach(([dim,val]) => add(dim, val, 1, q.id));
+      }
+    }else if(q.type === 'multi'){
+      const arr = Array.isArray(a) ? a : [];
+      arr.forEach(label => {
+        const opt = (q.opts || []).find(o => o.label === label);
+        if(opt && opt.scores){
+          Object.entries(opt.scores).forEach(([dim,val]) => add(dim, val, 1, q.id));
+        }
+      });
+    }
+  });
+
+  const dims = {};
+  Object.keys(DIM_NAMES).forEach(dim => {
+    dims[dim] = dimCounts[dim] ? Math.round(dimSums[dim] / dimCounts[dim]) : 50;
+  });
+
+  const careerResults = CAREERS.map(c => {
+    let weightedDiff = 0, weightSum = 0;
+    const diffs = [];
+    Object.entries(c.ideal).forEach(([dim, ideal]) => {
+      let w = 1;
+      if(['R','I','A','S','E','C'].includes(dim)) w = 2;
+      if(['结构化','协作','不确定性','压力稳定','自我推销','学习'].includes(dim)) w = 2;
+      if(['稳定','成长','自主','影响','收入','平衡'].includes(dim)) w = 1.2;
+      const user = dims[dim] ?? 50;
+      const d = Math.abs(user - ideal);
+      weightedDiff += d * w;
+      weightSum += w;
+      diffs.push({dim, user, ideal, d});
+    });
+    let match = 100 - weightedDiff / weightSum;
+    const adj = [];
+    if(dims['家庭责任'] >= 70){
+      if(c.scoreKey === '创业自由'){ match -= 15; adj.push('家庭责任高，创业/自由职业风险需下调'); }
+      if(c.scoreKey === '销售商务'){ match -= 5; adj.push('家庭责任高，低底薪销售需谨慎'); }
+    }
+    if(dims['经济缓冲'] <= 40){
+      if(c.scoreKey === '创业自由'){ match -= 15; adj.push('经济缓冲低，不宜承担高现金流风险'); }
+      if(c.scoreKey === '销售商务'){ match -= 5; adj.push('经济缓冲低，收入波动岗位需谨慎'); }
+    }
+    if(dims['搬迁意愿'] <= 35){
+      if(c.scoreKey === '销售商务'){ match -= 6; adj.push('搬迁意愿低，区域机会需优先本地'); }
+      if(c.scoreKey === '技术支持'){ match -= 4; adj.push('搬迁意愿低，实施类岗位出差需核实'); }
+    }
+    if(dims['人脉信息'] <= 40 && c.scoreKey === '销售商务'){ match -= 8; adj.push('人脉信息低，销售启动难度较高'); }
+    if(dims['自我推销'] <= 40 && c.scoreKey === '销售商务'){ match -= 15; adj.push('自我推销低，销售核心要求差距大'); }
+    if(dims['自我推销'] <= 40 && c.scoreKey === '创业自由'){ match -= 10; adj.push('自我推销低，获客是主要短板'); }
+    if(dims['不确定性'] <= 40 && c.scoreKey === '创业自由'){ match -= 10; adj.push('不确定性耐受低，创业压力大'); }
+    if(dims['不确定性'] <= 40 && c.scoreKey === '创意设计'){ match -= 8; adj.push('不确定性耐受低，创意评审波动需适应'); }
+    if(dims['决策困难'] >= 70){ match -= 5; adj.push('决策困难偏高，需设决策截止日'); }
+    match = Math.max(20, Math.min(95, Math.round(match)));
+    diffs.sort((a,b)=>b.d-a.d);
+    const best = diffs.slice().sort((a,b)=>a.d-b.d).slice(0,3);
+    const worst = diffs.slice(0,2);
+    return {career:c, match, adj:[...new Set(adj)], best, worst, diffs};
+  }).sort((a,b)=>b.match-a.match);
+
+  const positiveDims = ['结构化','协作','不确定性','压力稳定','自我推销','学习','成长','自主','影响','收入','平衡','R','I','A','S','E','C'];
+  const strengths = positiveDims
+    .map(d => ({dim:d, score:dims[d]}))
+    .sort((a,b)=>b.score-a.score)
+    .slice(0,3);
+
+  const riskList = [];
+  if(dims['决策困难'] >= 65) riskList.push('决策困难偏高：容易因害怕选错而拖延，建议给重大决定设截止日。');
+  if(dims['行动拖延'] >= 65) riskList.push('行动拖延偏高：建议用 2 周微项目替代长期空想。');
+  if(dims['人脉信息'] <= 40) riskList.push('人脉与信息渠道偏低：建议每周联系 1 位目标岗位从业者。');
+  if(dims['自我推销'] <= 40) riskList.push('自我推销偏低：成果可见度可能不足，需准备 3 分钟成果介绍。');
+  if(dims['不确定性'] <= 40) riskList.push('不确定性耐受偏低：优先选择流程清晰、反馈稳定的环境。');
+  if(dims['经济缓冲'] <= 40) riskList.push('经济缓冲偏低：不建议裸辞或高投入创业，采用双轨验证。');
+  if(dims['家庭责任'] >= 70) riskList.push('家庭经济责任较高：优先保证稳定现金流，再逐步验证新方向。');
+  if(riskList.length === 0) riskList.push('当前主要约束不明显，但仍建议用信息访谈和微项目验证假设。');
+
+  const notRecommended = careerResults.slice(-2).reverse();
+  return {dims, dimItems, careerResults, strengths, risks:riskList, notRecommended};
+}
+
+/* ================= 报告渲染 ================= */
+function scoreClass(score, dim){
+  if(['决策困难','行动拖延','家庭责任'].includes(dim)){
+    if(score >= 70) return 'bad';
+    if(score >= 55) return 'warn';
+    return 'good';
+  }
+  if(score >= 65) return 'good';
+  if(score >= 40) return '';
+  return 'warn';
+}
+
+function dimensionTable(data){
+  return DIM_GROUPS.map(g => `
+    <div class="callout">
+      <strong>${g.title}</strong>
+      ${g.dims.map(d => {
+        const items = (data.dimItems[d] || []).join('、');
+        return `<div class="metric">
+          <div class="metricTop"><span>${DIM_NAMES[d] || d}</span><span>${data.dims[d]} / 100</span></div>
+          <div class="bar ${scoreClass(data.dims[d], d)}"><div style="width:${data.dims[d]}%"></div></div>
+          <div class="small">依据题号：${items || '—'}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  `).join('');
+}
+
+function careerCard(item, rank){
+  const c = item.career;
+  const best = item.best.map(x => `${DIM_NAMES[x.dim] || x.dim}（你 ${x.user} / 参考 ${x.ideal}）`).join('；');
+  const worst = item.worst.map(x => `${DIM_NAMES[x.dim] || x.dim}（你 ${x.user} / 参考 ${x.ideal}）`).join('；');
+  return `<div class="matchCard">
+    <div class="matchHead">
+      <div>
+        <h3 style="margin:0">TOP ${rank} · ${esc(c.name)}</h3>
+        <div class="small">示例岗位：${esc(c.examples)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="scoreBig">${item.match}</div>
+        <div class="small">匹配度 / 100</div>
+      </div>
+    </div>
+    <p><strong>较匹配点：</strong>${esc(best)}</p>
+    <p><strong>主要差距：</strong>${esc(worst)}</p>
+    <p><strong>进入门槛：</strong>${esc(c.gate)}</p>
+    <p><strong>风险点：</strong>${esc(c.risk)}</p>
+    ${item.adj.length ? `<p><strong>现实约束调整：</strong>${esc(item.adj.join('；'))}</p>` : ''}
+    <p><strong>建议验证行动：</strong>${esc(c.verify)}</p>
+  </div>`;
+}
+
+function planHTML(data){
+  const top = data.careerResults[0];
+  const c = top.career;
+  const low = [];
+  if(data.dims['自我推销'] < 50) low.push('准备一份 3 分钟成果介绍，向 2 位同行试讲并收集反馈。');
+  if(data.dims['人脉信息'] < 50) low.push('每周联系 1 位目标岗位从业者，完成 3 次信息访谈。');
+  if(data.dims['决策困难'] >= 60) low.push('给转岗/求职决定设一个明确截止日，并列出“足够好”的决策标准。');
+  if(data.dims['行动拖延'] >= 60) low.push('启动一个 2 周微项目，先交付最小版本，不追求完美。');
+  if(data.dims['不确定性'] < 45) low.push('优先选择流程清晰、反馈稳定的岗位；用兼职/项目制先验证。');
+  if(data.dims['结构化'] < 50) low.push('用项目模板管理任务：目标—节点—负责人—复盘。');
+  if(low.length === 0) low.push('保持每周一次职业信息复盘，记录机会、风险和下一步。');
+  return `<div class="callout good">
+    <strong>90 天行动计划（围绕 TOP1：${esc(c.name)}）</strong>
+    <ol class="list">
+      <li><strong>第 1–2 周：信息访谈。</strong>找 3 位目标岗位从业者，问：日常任务、入门门槛、最难的部分、最近招聘看什么、给新人的建议。</li>
+      <li><strong>第 3–4 周：微项目验证。</strong>${esc(c.verify)}</li>
+      <li><strong>第 5–8 周：技能补足。</strong>优先补：${esc(c.skills)}。每周至少 2 次刻意练习，产出可展示成果。</li>
+      <li><strong>第 9–12 周：投递/转岗/复盘。</strong>每周记录投递或沟通数量、反馈、拒绝原因；每两周复盘一次是否继续、调整或停止。</li>
+    </ol>
+    <p><strong>针对你当前短板的补充任务：</strong></p>
+    <ul class="list">${low.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+  </div>`;
+}
+
+function renderReport(data){
+  const top5 = data.careerResults.slice(0,5);
+  const strengths = data.strengths.map(s => `${DIM_NAMES[s.dim]} ${s.score}`).join('、');
+  const reportNoDisplay = reportNo || 'BASIC-LOCAL';
+  const dateStr = reportGeneratedAt ? new Date(reportGeneratedAt).toLocaleDateString('zh-CN') : new Date().toLocaleDateString('zh-CN');
+
+  $('report').innerHTML = `
+    <div class="card">
+      <div class="row noPrint" style="justify-content:space-between">
+        <div>
+          <span class="tag">基础版自动报告</span>
+          <span class="tag">${reportNoDisplay}</span>
+          <span class="tag">${dateStr}</span>
+        </div>
+        <div>
+          <button class="btn secondary" onclick="window.print()">打印 / 保存 PDF</button>
+          <button class="btn ghost" onclick="restart()">重新测试</button>
+        </div>
+      </div>
+      <h1>职业适配与发展策略评估报告</h1>
+      <p class="muted">本报告基于你的自评答案自动生成。它提供可解释的方向假设和验证行动，不是成功概率预测，也不替代专家复核。</p>
+
+      <div class="callout">
+        <strong>一页摘要</strong>
+        <p><strong>核心优势：</strong>${esc(strengths)}。</p>
+        <p><strong>优先职业群：</strong>${top5.map((x,i)=>`${i+1}. ${esc(x.career.name)}（${x.match}）`).join('；')}。</p>
+        <p><strong>主要风险：</strong>${esc(data.risks.slice(0,2).join(' '))}</p>
+        <p><strong>下一步：</strong>不要立刻做长期投入；先用“3 次信息访谈 + 1 个 2 周微项目”验证 TOP1 方向。</p>
+      </div>
+
+      <h2>个人画像</h2>
+      <p>你的兴趣、工作风格、价值观、决策方式与社会约束如下。分数为 0–100 的相对强度，不是人群百分位；基础版用于自我对照，深度版可结合常模和专家复核解释。</p>
+      ${dimensionTable(data)}
+
+      <h2>TOP5 职业群匹配卡</h2>
+      <p class="muted">匹配度 = 个人—环境契合度 + 现实可行性调整。匹配度高表示“更值得优先验证”，不等于“你一定成功”。</p>
+      ${top5.map((item,i)=>careerCard(item,i+1)).join('')}
+
+      <h2>不建议优先方向</h2>
+      <p class="muted">以下方向不是“你绝对不能做”，而是当前画像与约束下，优先验证成本较高、风险较大，建议暂缓或先小步验证。</p>
+      ${data.notRecommended.map(item => `
+        <div class="callout warn">
+          <strong>${esc(item.career.name)}（匹配度 ${item.match}）</strong>
+          <p>主要不匹配：${esc(item.worst.map(x=>`${DIM_NAMES[x.dim] || x.dim}（你 ${x.user} / 参考 ${x.ideal}）`).join('；'))}。</p>
+          <p>${esc(item.career.risk)}</p>
+          ${item.adj.length ? `<p>现实约束：${esc(item.adj.join('；'))}</p>` : ''}
+        </div>
+      `).join('')}
+
+      <h2>现实约束提醒</h2>
+      <div class="callout warn">
+        <ul class="list">${data.risks.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
+      </div>
+
+      ${planHTML(data)}
+
+      <h2>方法与局限</h2>
+      <ul class="list">
+        <li><strong>方法：</strong>本报告采用兴趣、工作风格、价值观、决策风险、社会资源与约束的多维自评，结合职业群参考画像进行加权匹配，并对家庭责任、经济缓冲、搬迁意愿、人脉、自我推销等现实约束做调整。</li>
+        <li><strong>局限：</strong>基础版为规则化自动报告，未使用人群常模、置信区间和专家逐份复核；分数受自评状态影响。重大决策应结合真实信息访谈、试做项目和深度版专家解读。</li>
+        <li><strong>伦理边界：</strong>本测试不用于招聘筛选，不构成临床诊断、医疗建议、法律或财务建议。答案保存在本机浏览器，不上传服务器。</li>
+      </ul>
+
+      <div class="callout good noPrint">
+        <strong>想获得更具体的解释？</strong>
+        <p>深度版可由心理学/社会学博士团队复核：结合你的简历、目标行业、地域与家庭约束，逐条解释匹配逻辑，校准 TOP 方向，并定制 90 天行动方案。</p>
+      </div>
+
+      <p class="small printOnly">报告编号：${reportNoDisplay} · 生成日期：${dateStr} · 基础版自动报告</p>
+    </div>
+  `;
+}
+
+/* ================= 启动恢复 ================= */
+function restoreState(state){
+  answers = state.answers || {};
+  step = state.step || 0;
+  currentPhase = state.phase;
+  reportNo = state.reportNo || null;
+  reportGeneratedAt = state.reportGeneratedAt || null;
+  if(state.consent){
+    const el = $('consent');
+    if(el) el.checked = true;
+  }
+  if(state.phase === 'report'){
+    reportData = computeReport();
+    renderReport(reportData);
+    $('intro').classList.add('hidden');
+    $('test').classList.add('hidden');
+    $('report').classList.remove('hidden');
+  }else if(state.phase === 'test'){
+    $('intro').classList.add('hidden');
+    $('test').classList.remove('hidden');
+    renderStep();
+    showRestoreNotice(state.savedAt);
+  }
+}
+
+function boot(){
+  updateAutosaveHint();
+  const saved = loadState();
+  if(!saved) return;
+  if((saved.phase === 'test' || saved.phase === 'report') && saved.answers && Object.keys(saved.answers).length > 0){
+    restoreState(saved);
+  }
+}
+boot();
+</script>
+</body>
+</html>
